@@ -20,36 +20,6 @@ Direct PII is removed, while indirect PII is masked or generalized. Sensitive he
 The API key is hardcoded in the script, posing a security risk and potentially violating the API provider’s Terms of Service. If exposed in a public repository, it could be misused.
 
 **Corrected Code:**
-```python
-import os
-import requests
-
-API_URL = "https://healthstats-api.example.com/records"
-API_KEY = os.getenv("HEALTHSTATS_API_KEY")
-
-if not API_KEY:
-    raise ValueError("API key not found. Please set the HEALTHSTATS_API_KEY environment variable.")
-
-records = []
-
-for page in range(1, 101):
-    response = requests.get(
-        API_URL,
-        params={"page": page, "key": API_KEY},
-        timeout=10
-    )
-    response.raise_for_status()
-    data = response.json()
-   records.extend(data.get("results", []))
-
-**Problem:**
-The script collects 100 pages of data without verifying API rate limits or Terms of Service. Additionally, storing all records permanently without anonymization raises ethical and privacy concerns.
-
-**Solution:**
-Implement rate limiting, minimize data collection, anonymize sensitive information, and store only de-identified records.
-
-**Corrected Code:**
-```python
 import os
 import time
 import requests
@@ -58,7 +28,9 @@ API_URL = "https://healthstats-api.example.com/records"
 API_KEY = os.getenv("HEALTHSTATS_API_KEY")
 
 if not API_KEY:
-    raise ValueError("API key not found. Please set the HEALTHSTATS_API_KEY environment variable.")
+    raise ValueError(
+        "API key not found. Please set the HEALTHSTATS_API_KEY environment variable."
+    )
 
 def anonymize_record(record):
     """Remove or mask personally identifiable information."""
