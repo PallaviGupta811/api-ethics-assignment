@@ -40,8 +40,7 @@ for page in range(1, 101):
     )
     response.raise_for_status()
     data = response.json()
-    records.extend(data.get("results", []))
-    ### Violation 2: Excessive Data Collection and Permanent Storage
+   records.extend(data.get("results", []))
 
 **Problem:**
 The script collects 100 pages of data without verifying API rate limits or Terms of Service. Additionally, storing all records permanently without anonymization raises ethical and privacy concerns.
